@@ -1,0 +1,15 @@
+network:
+    ethernets:
+        ens18:
+          dhcp4: no
+        ens19:
+            addresses:
+            - {{ server_config[inventory_hostname].api_ip_address }}/16
+            gateway4: 10.0.0.1
+            nameservers:
+              addresses:
+                - 168.126.63.1
+        ens20:
+            addresses:
+            - {{ server_config[inventory_hostname].maas_ip_address }}/24 
+    version: 2

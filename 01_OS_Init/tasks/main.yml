@@ -1,0 +1,27 @@
+# tasks file for /home/sdsosp/deploy/01_OS_Init
+---
+- name: Configure static IP for network interface
+  template:
+    src: templates/netplan_config.j2
+    dest: /etc/netplan/50-cloud-init.yaml
+
+- name: Apply netplan configuration
+  become: true
+  command: netplan apply
+
+- name: Set the hostname
+  hostname:
+    name: "{{ server_config[inventory_hostname].hostname }}"
+
+- name: Install packages
+  apt:
+    name:
+      - git
+      - vim
+      - net-tools
+      - iputils-ping
+      - wget
+      - tmux
+      - python3-venv
+      - curl
+    state: present

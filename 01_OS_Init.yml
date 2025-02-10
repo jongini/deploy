@@ -1,0 +1,21 @@
+---
+- name: Server init Setting 
+  hosts: init
+  become: yes
+  roles:
+    - 01_OS_Init 
+
+- name: MAAS Machine Name Change 
+  hosts: local
+  become: yes
+  tasks:
+    - name: Get system ID for the machine with the IPMI IP Address
+      #shell: maas default machines read | jq -r '.[] | select(.ip_addresses[]?=="{{ server_config[inventory_hostname].maas_ip_address}} ") | .system_id' 
+      shell: maas default machines read | jq -r '.[] | select(.ip_addresses[]?=="192.168.10.7") | .system_id'
+      register: system_id_output
+      changed_when: false
+
+    - name: Update machine hostname
+      shell: >
+        maas default machines update {{ system_id_output.stdout }} hostname= "{{ server_config[inventory_hostname].hostname }}"
+

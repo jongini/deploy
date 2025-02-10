@@ -1,0 +1,85 @@
+---
+# tasks file for 02_K8S_Master_Init
+#
+#
+- name: swapoff
+  shell: swapoff -a
+
+- name: swapoff with fstab
+  shell: sed -i 's/^\(.*swap.*\)/#\1/' /etc/fstab
+
+- name: delete source.list.d
+  file:
+    path: /etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list
+    state: absent
+
+- name: Change mode directory 
+  shell: chmod 755 /etc/apt/keyrings
+
+- name: gpg key download docker
+  shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc"
+
+- name: chmod docker.asc
+  shell: "chmod a+r /etc/apt/keyrings/docker.asc"
+
+- name: Add Docker repository
+  shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+- name: delete kuberneters-apt-keyring.gpg 
+  file:
+    path: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    state: absent
+
+- name: Download Kubernetes package repositories
+  shell: "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+
+- name: chmod kubernetes gpg
+  shell: "chmod a+r /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+
+- name: Add the appropriate Kubernetes apt repository
+  shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+- name: Update the APT package cache
+  apt:
+    update_cache: yes
+
+- name: Install per-requisites
+  apt:
+    name:
+      - ca-certificates
+      - apt-transport-https
+    state: present
+
+- name: Install docker package & containerd.io
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+
+- name: Create default containerd config file
+  shell: "containerd config default > /etc/containerd/config.toml"
+
+- name: cgroup update
+  shell: "sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml"
+
+- name: Restart containerd service
+  service:
+    name: containerd
+    state: restarted
+    enabled: true
+
+- name: Install Kubernetes package
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+
+- name: Hold kuberneter package version 
+  shell : "apt-mark hold kubelet kubeadm kubectl"
+  

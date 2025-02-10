@@ -1,0 +1,3 @@
+---
+# defaults file for 02_K8S_Master_Init
+containerd_config_path: "/etc/containerd/config.toml"

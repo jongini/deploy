@@ -1,0 +1,7 @@
+server_config:
+  192.168.10.6: { hostname: "net-server", api_ip_address: "10.0.1.11", maas_ip_address: "192.168.10.6" }
+  192.168.10.7: { hostname: "k8s-master-01", api_ip_address: "10.0.1.101", maas_ip_address: "192.168.10.7" }
+  192.168.10.8: { hostname: "k8s-master-02", api_ip_address: "10.0.1.102", maas_ip_address: "192.168.10.8" }
+  192.168.10.9: { hostname: "k8s-master-03", api_ip_address: "10.0.1.103", maas_ip_address: "192.168.10.9" }
+  192.168.10.10: { hostname: "k8s-worker-01", api_ip_address: "10.0.1.111", maas_ip_address: "192.168.10.10" }
+    
