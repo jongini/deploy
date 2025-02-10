@@ -4,4 +4,8 @@ server_config:
   192.168.10.8: { hostname: "k8s-master-02", api_ip_address: "10.0.1.102", maas_ip_address: "192.168.10.8" }
   192.168.10.9: { hostname: "k8s-master-03", api_ip_address: "10.0.1.103", maas_ip_address: "192.168.10.9" }
   192.168.10.10: { hostname: "k8s-worker-01", api_ip_address: "10.0.1.111", maas_ip_address: "192.168.10.10" }
+  192.168.10.254: { hostname: "k8s-worker-02", api_ip_address: "10.0.1.112", maas_ip_address: "192.168.10.254" }
+  192.168.10.2: { hostname: "ceph-01", api_ip_address: "10.0.1.121", maas_ip_address: "192.168.10.2" }
+  192.168.10.3: { hostname: "ceph-02", api_ip_address: "10.0.1.122", maas_ip_address: "192.168.10.3" }
+  192.168.10.4: { hostname: "ceph-03", api_ip_address: "10.0.1.123", maas_ip_address: "192.168.10.4" }
     
