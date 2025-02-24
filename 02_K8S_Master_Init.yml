@@ -1,6 +1,6 @@
 ---
 - name: Server init Setting 
-  hosts: master
+  hosts: all
   become: yes
   roles:
     - 02_K8S_Master_Init 
